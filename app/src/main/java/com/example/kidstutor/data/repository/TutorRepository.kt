@@ -8,6 +8,7 @@ import com.google.ai.client.generativeai.GenerativeModel
 import com.google.ai.client.generativeai.type.content
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDateTime
+import com.example.kidstutor.BuildConfig
 
 data class TopicContent(
     val content: String,
@@ -27,15 +28,18 @@ class TutorRepository(
     }
 
     private fun initializeModels() {
+        if (BuildConfig.GEMINI_API_KEY.isEmpty()) {
+            throw Exception("Gemini API key not found. Please add it to local.properties")
+        }
 
         try {
             generativeModel = GenerativeModel(
                 modelName = "gemini-2.0-flash",
-                apiKey = "AIzaSyBLq5-lskIxPgBZ8PJg660K7264EbM9ysw"
+                apiKey = BuildConfig.GEMINI_API_KEY
             )
             generativeVisionModel = GenerativeModel(
                 modelName = "gemini-2.0-flash",
-                apiKey = "AIzaSyBLq5-lskIxPgBZ8PJg660K7264EbM9ysw"
+                apiKey = BuildConfig.GEMINI_API_KEY
             )
         } catch (e: Exception) {
             // Log initialization error
